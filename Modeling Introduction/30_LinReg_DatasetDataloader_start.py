@@ -116,16 +116,3 @@ sns.scatterplot(x=range(len(losses)), y=losses)
 sns.lineplot(x=range(NUM_EPOCHS), y=bias)
 #%% visualise the slope development
 sns.lineplot(x=range(NUM_EPOCHS), y=slope)
-
-
-
-# %% check the result
-model.eval()
-y_pred = [i[0] for i in model(X).data.numpy()]
-y = [i[0] for i in y_true.data.numpy()]
-sns.scatterplot(x=X_list, y=y)
-sns.lineplot(x=X_list, y=y_pred, color='red')
-# %%
-import hiddenlayer as hl
-graph = hl.build_graph(model, X)
-# %%
