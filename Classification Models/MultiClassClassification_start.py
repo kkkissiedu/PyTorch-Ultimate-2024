@@ -125,3 +125,7 @@ with torch.no_grad():
 accuracy_score(y_test, y_test_pred.indices)
 
 # %%
+from collections import Counter
+most_common_cnt = Counter(y_test).most_common()[0][1]
+print(f'Naive Classifier Accuracy: {(most_common_cnt/len(y_test) * 100):1f}%')
+# %%
