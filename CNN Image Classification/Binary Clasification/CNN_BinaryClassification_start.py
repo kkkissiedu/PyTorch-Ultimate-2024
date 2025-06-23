@@ -5,11 +5,9 @@ import torchvision.transforms as transforms
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
-import os
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.metrics import accuracy_score
-os.getcwd()
 
 #%% transform, load data
 transform = transforms.Compose([
