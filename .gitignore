@@ -145,3 +145,5 @@ Videos/
 runs/
 bus.jpg
 CNN Image Classification/Binary Clasification/data
+CNN Image Classification/Multi Class Classification/test
+CNN Image Classification/Multi Class Classification/train
