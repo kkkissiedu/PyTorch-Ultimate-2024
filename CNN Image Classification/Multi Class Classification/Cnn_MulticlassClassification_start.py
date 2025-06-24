@@ -44,7 +44,6 @@ class ImageMulticlassClassificationNet(nn.Module):
         self.fc3 = nn.Linear(64, NUM_CLASSES)                         # [6, 3]      
 
         self.relu = nn.ReLU()
-        self.sigmoid = nn.Sigmoid()
 
 
     def forward(self, x):
@@ -67,7 +66,7 @@ model = ImageMulticlassClassificationNet()
 # %% loss function and optimizer
 # TODO: set up loss function and optimizer
 LR = 0.01
-loss_fn = nn.BCEWithLogitsLoss
+loss_fn = nn.CrossEntropyLoss
 optimizer = torch.optim.Adam(model.parameters(), lr = LR)
 # %% training
 NUM_EPOCHS = 10
@@ -91,16 +90,19 @@ for epoch in range(NUM_EPOCHS):
 y_test = []
 y_test_hat = []
 for i, data in enumerate(testloader, 0):
-    inputs, y_test_temp = data
+    inputs,labels = data
     with torch.no_grad():
-        y_test_hat_temp = model(inputs).round()
+        outputs = model(inputs)
+
+        predicted = torch.argmax(outputs, 1)
     
-    y_test.extend(y_test_temp.numpy())
-    y_test_hat.extend(y_test_hat_temp.numpy())
+    y_test.extend(labels.numpy())
+    y_test_hat.extend(predicted.numpy())
 
 # %%
-acc = accuracy_score(y_test, np.argmax(y_test_hat, axis=1))
+acc = accuracy_score(y_test, y_test_hat)
 print(f'Accuracy: {acc*100:.2f} %')
 # %% confusion matrix
-confusion_matrix(y_test, np.argmax(y_test_hat, axis=1))
+print("\nConfusion Matrix:")
+print(confusion_matrix(y_test, y_test_hat))
 # %%
