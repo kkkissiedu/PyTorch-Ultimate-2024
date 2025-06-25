@@ -15,7 +15,7 @@ os.getcwd()
 # TODO: set up image transforms
 transformer = transforms.Compose([
     transforms.Grayscale(num_output_channels = 1),
-    transforms.Resize(32),
+    transforms.Resize((32, 32)),
     transforms.ToTensor(),
     transforms.Normalize((0.5,), (0.5,))
 ]) 
@@ -45,7 +45,6 @@ class ImageMulticlassClassificationNet(nn.Module):
 
         self.relu = nn.ReLU()
 
-
     def forward(self, x):
         x = self.conv1(x)       # Output: [6, 6, 30, 30]
         x = self.relu(x)
@@ -55,8 +54,12 @@ class ImageMulticlassClassificationNet(nn.Module):
         x = self.pool(x)        # Output: [6, 16, 6, 6]
         x = torch.flatten(x, 1) # Output: [6, 16 * 6 * 6]
         x = self.fc1(x)         # Output: [6, 128]
+        x = self.relu(x)
         x = self.fc2(x)         # Output: [6, 64]
+        x = self.relu(x)
         x = self.fc3(x)         # Output: [6, 1]
+
+        return x
 
 
 # input = torch.rand(1, 1, 50, 50) # BS, C, H, W
@@ -65,8 +68,8 @@ model = ImageMulticlassClassificationNet()
 
 # %% loss function and optimizer
 # TODO: set up loss function and optimizer
-LR = 0.01
-loss_fn = nn.CrossEntropyLoss
+LR = 0.001
+loss_fn = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr = LR)
 # %% training
 NUM_EPOCHS = 10
