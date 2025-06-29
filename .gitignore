@@ -153,3 +153,9 @@ CNN Audio Classification/train
 CNN Object Detection/images
 CNN Object Detection/test_labels
 CNN Object Detection/train_labels
+CNN Object Detection/Object Detection Yolo7/annotations
+CNN Object Detection/Object Detection Yolo7/images
+CNN Object Detection/Object Detection Yolo7/yolov7
+CNN Object Detection/Fruit Detection/images
+CNN Object Detection/Fruit Detection/test_labels
+CNN Object Detection/Fruit Detection/train_labels
