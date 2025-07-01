@@ -159,3 +159,7 @@ CNN Object Detection/Object Detection Yolo7/yolov7
 CNN Object Detection/Fruit Detection/images
 CNN Object Detection/Fruit Detection/test_labels
 CNN Object Detection/Fruit Detection/train_labels
+Transfer Learning/test
+Transfer Learning/train
+CNN Object Detection/Object Detection Yolo7/yolov7/test
+CNN Object Detection/Object Detection Yolo7/yolov7/train
