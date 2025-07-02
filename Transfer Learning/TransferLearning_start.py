@@ -88,7 +88,6 @@ for epoch in range(NUM_EPOCHS):
 #%% show losses over epoch
 sns.lineplot(x = range(len(train_losses)), y = train_losses)
 
-
 # %%
 if test_loader:
     fig = plt.figure(figsize=(15, 10)) 
