@@ -19,11 +19,11 @@ transform = transforms.Compose([transforms.Resize(255),
     transforms.CenterCrop(224), 
     transforms.ToTensor()]) 
  
-dataset = torchvision.datasets.ImageFolder(train_dir, transform= transform) 
-train_loader = torch.utils.data.DataLoader(dataset, batch_size=128,shuffle=True) 
+train_dataset = torchvision.datasets.ImageFolder(train_dir, transform= transform) 
+train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=128,shuffle=True) 
 
-dataset = torchvision.datasets.ImageFolder(test_dir, transform= transform) 
-test_loader = torch.utils.data.DataLoader(dataset, batch_size=128,shuffle=True) 
+test_dataset = torchvision.datasets.ImageFolder(test_dir, transform= transform) 
+test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=128,shuffle=True) 
 
 # %%
 def imshow(image_torch): 
@@ -48,13 +48,12 @@ for params in model.parameters():
 #%% overwrite classifier of model
 # TODO: overwrite classifier of model
 model.classifier = nn.Sequential(OrderedDict([
-    ('fc1',nn.Linear(1024,1)),
-    ('Output',nn.Sigmoid())
+    ('fc1', nn.Linear(1024, 1))
 ]))
 
 # %% train the model
 opt = optim.Adam(model.classifier.parameters()) 
-loss_function = nn.BCELoss() 
+loss_function = nn.BCEWithLogitsLoss() 
 train_losses=[] 
  
 model.train()
@@ -91,21 +90,37 @@ sns.lineplot(x = range(len(train_losses)), y = train_losses)
 
 
 # %%
-fig = plt.figure(figsize=(10, 10)) 
-class_labels = {0:'cat', 1:'dog'} 
-X_test, y_test = iter(test_loader).next() 
-with torch.no_grad():
-    y_pred = model(X_test) 
-    y_pred = y_pred.round()
-    y_pred = [p.item() for p in y_pred] 
+if test_loader:
+    fig = plt.figure(figsize=(15, 10)) 
+    class_labels = {v: k for k, v in test_dataset.class_to_idx.items()}
+    
+    model.eval() 
+    
+    X_test, y_test = next(iter(test_loader))
 
-# create subplots
-for num, sample in enumerate(X_test): 
-    plt.subplot(4,6,num+1) 
-    plt.title(class_labels[y_pred[num]]) 
-    plt.axis('off') 
-    sample = sample.cpu().numpy() 
-    plt.imshow(np.transpose(sample, (1,2,0))) 
+    with torch.no_grad():
+        y_pred_logits = model(X_test)
+        y_pred_probs = torch.sigmoid(y_pred_logits)
+        
+        y_pred = y_pred_probs.squeeze().round().numpy()
+        y_test = y_test.numpy()
+
+    for num, sample in enumerate(X_test): 
+        plt.subplot(4, 6, num+1) 
+        
+        pred_label = class_labels[y_pred[num].item()]
+        true_label = class_labels[y_test[num].item()]
+        
+        title_color = 'green' if pred_label == true_label else 'red'
+        plt.title(f"Pred: {pred_label}\nTrue: {true_label}", color=title_color)
+        
+        plt.axis('off') 
+        
+        sample = sample.cpu().numpy().transpose((1, 2, 0))
+        plt.imshow(sample)
+        
+    plt.tight_layout()
+    plt.show()
 
 # %% accuracy
 acc = accuracy_score(y_test, y_pred)
