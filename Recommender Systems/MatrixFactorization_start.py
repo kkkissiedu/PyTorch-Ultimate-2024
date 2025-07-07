@@ -13,7 +13,16 @@ df.head(2)
 print(f"Unique Users: {df.userId.nunique()}, Unique Movies: {df.movieId.nunique()}")
 
 #%% Data Class
-       
+class MovieDataset(Dataset):
+    def __init__(self, users, movies, ratings):
+        super().__init__()
+        self.users = users
+        self.movies = movies
+        self.ratings = ratings
+
+    def __len__(Self, x):
+        return len(self.users)
+
 #%% Model Class
 #%% encode user and movie id to start from 0 
 
