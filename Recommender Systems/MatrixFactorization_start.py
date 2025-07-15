@@ -20,8 +20,15 @@ class MovieDataset(Dataset):
         self.movies = movies
         self.ratings = ratings
 
-    def __len__(Self, x):
+    def __len__(self, x):
         return len(self.users)
+    
+    def __getitem__(self, index):
+        users = self.users[index]
+        movies = self.movies[index]
+        ratings = self.ratings[index]
+
+        return torch.tensor(users, dtype = torch.long), torch.tensor(movies, dtype = torch.long), torch.tensor(ratings, dtype = torch.long)
 
 #%% Model Class
 #%% encode user and movie id to start from 0 
