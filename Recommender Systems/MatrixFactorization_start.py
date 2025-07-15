@@ -31,6 +31,23 @@ class MovieDataset(Dataset):
         return torch.tensor(users, dtype = torch.long), torch.tensor(movies, dtype = torch.long), torch.tensor(ratings, dtype = torch.long)
 
 #%% Model Class
+class RecSysModel(nn.Module):
+    def __init__ (self, n_users, n_movies, n_embeddings = 32):
+        super().__init__()
+        self.user_embed = nn.Embedding(n_users, n_embeddings)
+        self.movie_embed = nn.Embedding(n_movies, n_embeddings)
+
+        self.out = nn.Linear(n_embeddings * 2, 1)
+
+    def forward(self, users, movies):
+        user_embeds = self.user_embed(users)
+        movie_embeds = self.movie_embed(movies)
+
+        x = torch.cat([user_embeds, movie_embeds], dim = 1)
+        x = self.out(x)
+
+        return x
+
 #%% encode user and movie id to start from 0 
 
 #%% create train test split
