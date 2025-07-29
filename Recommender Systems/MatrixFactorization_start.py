@@ -20,7 +20,7 @@ class MovieDataset(Dataset):
         self.movies = movies
         self.ratings = ratings
 
-    def __len__(self, x):
+    def __len__(self):
         return len(self.users)
     
     def __getitem__(self, index):
@@ -49,9 +49,17 @@ class RecSysModel(nn.Module):
         return x
 
 #%% encode user and movie id to start from 0 
+lbl_user = preprocessing.LabelEncoder()
+lbl_movie = preprocessing.LabelEncoder()
 
+df.userId = lbl_user.fit_transform(df.userId.values)
+df.movieId = lbl_movie.fit_transform(df.movieId.values)
+
+df
 #%% create train test split
-
+df_train, df_test = model_selection.train_test_split(df, 
+                                 test_size = 0.2,
+                                 random_state = 123)
 #%% Dataset Instances
 train_dataset = MovieDataset(
     users=df_train.userId.values,
