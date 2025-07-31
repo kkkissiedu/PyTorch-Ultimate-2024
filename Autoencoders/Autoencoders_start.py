@@ -25,11 +25,59 @@ dataloader = DataLoader(dataset, batch_size=8, shuffle=True)
 LATENT_DIMS = 128
 
 # TODO: Implement Encoder class
+class Encoder(nn.Module):
+    def __init__(self):
+        super(Encoder, self).__init__()
+
+        self.conv1 = nn.Conv2d(1, 6, 3)         # out: BS, 62, 62
+        self.conv2 = nn.Conv2d(6, 16, 3)        # out: BS, 60, 60
+        self.relu = nn.ReLU()
+        self.flatten = nn.Flatten()
+        self.fc1 = nn.Linear(16 * 60 * 60, LATENT_DIMS)
+
+    def forward(self, x):
+        x = self.conv1(x)
+        x = self.conv2(x)
+        x = self.relu(x)
+        x = self.flatten(x)
+        x = self.fc1(x)
+
+        return x
 
 # TODO: Implement Decoder class
+class Decoder(nn.Module):
+    def __init__(self):
+        super(Decoder, self).__init__()
+
+        self.fc1 = nn.Linear(LATENT_DIMS, 16 * 60 * 60)
+        self.unflatten = nn.Unflatten(-1, (16, 60, 60))
+        self.relu = nn.ReLU()
+        self.deconv1 = nn.ConvTranspose2d(16, 6, 3)
+        self.deconv2 = nn.ConvTranspose2d(6, 1, 3)
+
+    def forward(self, x):
+        x = self.fc1(x)
+        x = self.unflatten(x)
+        x = self.relu(x)
+        x = self.deconv1(x)
+        x = self.deconv2(x)
+    
+        return x
+
 
 # TODO: Implement Autoencoder class
+class Autoencoder(nn.Module):
+    def __init__(self):
+        super(Autoencoder, self).__init__()
 
+        self.encoder = Encoder()
+        self.decoder = Decoder()
+
+    def forward(self, x):
+        x = self.encoder(x)
+        x = self.decoder(x)
+
+        return x
 
 # Test it
 # input = torch.rand((1, 1, 64, 64))
@@ -60,12 +108,12 @@ for epoch in range(NUM_EPOCHS):
 
 # %% visualise original and reconstructed images
 def show_image(img):
-    img = 0.5 * (img + 1)  # denormalizeA
+    img = 0.5 * (img + 1)  # denormalize
     # img = img.clamp(0, 1) 
     npimg = img.numpy()
     plt.imshow(np.transpose(npimg, (1, 2, 0)))
 
-images, labels = iter(dataloader).next()
+images, labels = next(iter(dataloader))
 print('original')
 plt.rcParams["figure.figsize"] = (20,3)
 show_image(torchvision.utils.make_grid(images))
@@ -84,3 +132,5 @@ show_image(torchvision.utils.make_grid(model(images)))
 image_size = images.shape[2] * images.shape[3] * 1
 compression_rate = (1 - LATENT_DIMS / image_size) * 100
 compression_rate
+
+# %%
