@@ -2,6 +2,7 @@
 import torch
 from torch.utils.data import DataLoader
 from torch import nn
+from tqdm import tqdm
 
 import math
 import matplotlib.pyplot as plt
@@ -62,7 +63,7 @@ loss_function = nn.BCELoss()
 optimizer_discriminator = torch.optim.Adam(discriminator.parameters(), lr = LR)
 optimizer_generator = torch.optim.Adam(generator.parameters(), lr = LR)
 
-for epoch in range(NUM_EPOCHS):
+for epoch in tqdm(range(NUM_EPOCHS), desc="Training Progress"):
 
     epoch_loss_d = 0.0
     epoch_loss_g = 0.0
@@ -112,7 +113,7 @@ for epoch in range(NUM_EPOCHS):
             avg_loss_d = epoch_loss_d / len(train_loader)
             avg_loss_g = epoch_loss_g / len(train_loader)
 
-            print(f"Epoch: {epoch} | Discriminator Loss: {avg_loss_d:.4f} | Generator Loss: {avg_loss_g:.4f}")
+            tqdm.write(f"Epoch: {epoch} | D Loss: {loss_discriminator.item():.4f} | G Loss: {loss_generator.item():.4f}")
             
             with torch.no_grad():
                 latent_space_samples = torch.randn(1000, 2)
