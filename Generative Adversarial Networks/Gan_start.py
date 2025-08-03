@@ -126,8 +126,8 @@ for epoch in range(NUM_EPOCHS):
             plt.ylim((-20, 15))
             plt.title(f"Epoch {epoch}")
             plt.legend()
-            plt.show()
             plt.savefig(f"train_progress/image{str(epoch).zfill(4)}.jpg")
+            plt.show()
             plt.close()
 
 
