@@ -33,7 +33,6 @@ train_loader = DataLoader(
     train_set, batch_size=BATCH_SIZE, shuffle=True
 )
 #%% initialize discriminator and generator
-# TODO: initialize discriminator and generator
 discriminator = nn.Sequential(
     nn.Linear(2, 256),
     nn.ReLU(),
