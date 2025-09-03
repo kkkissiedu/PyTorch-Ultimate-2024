@@ -91,4 +91,8 @@ with torch.no_grad():
     test_accuracy = int(correct_pred.sum()) / int(data.test_mask.sum())
     print(f'Test Accuracy: {test_accuracy}')
 
+# %% Visualize Result
+z = TSNE(n_components = 2).fit_transform(y_pred[data.test_mask].detach().cpu().numpy())
+sns.scatterplot(x = z[:, 0], y = z[:, 1], hue = data.y[data.test_mask])
+
 # %%
