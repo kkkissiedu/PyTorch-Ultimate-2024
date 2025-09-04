@@ -60,7 +60,7 @@ model.train()
 for epoch in range(num_epochs):
     optimizer.zero_grad()
     
-    y_pred = model(data.x, data.edge_index)
+    y_pred = model(data.x,0 data.edge_index)
     y_true = data.y
 
     loss = criterion(y_pred[data.train_mask], y_true[data.train_mask])

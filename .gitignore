@@ -167,3 +167,6 @@ CNN Image Classification/Binary Classification/data
 Autoencoders/data
 Generative Adversarial Networks/train_progress
 Graph Neural Networks/data
+Transformers/train
+Transformers/test
+Transformers/out
