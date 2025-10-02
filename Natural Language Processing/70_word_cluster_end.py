@@ -42,8 +42,6 @@ for category in categories:
     })
     df_word_cloud = pd.concat([df_word_cloud, temp], ignore_index=True)
     
-
-
 # %% get the 100 dimension word embedding for all words
 n_rows = df_word_cloud.shape[0]
 n_cols = glove_dim
